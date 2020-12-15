@@ -37,9 +37,7 @@ Point to point matching has been done using Gauss-Newton only
 
 import numpy as np
 import re
-import transformations as transform
-
-
+import icp.transformations as transform
 
 def read_file_original(file_path):
     a = []
@@ -124,7 +122,7 @@ def icp_point_to_plane(source_points, dest_points,loop):
     
     tr = np.dot(A_,b)
     
-    print str(tr[0])+','+str(tr[1])+','+str(tr[2])+','+str(tr[3])+','+str(tr[4])+','+str(tr[5])
+    print (str(tr[0])+','+str(tr[1])+','+str(tr[2])+','+str(tr[3])+','+str(tr[4])+','+str(tr[5]))
     
     R = transform.euler_matrix(tr[0],tr[1],tr[2])
     R[0,3] = tr[3]
@@ -146,6 +144,7 @@ def icp_point_to_plane(source_points, dest_points,loop):
     if(loop < 3):   #although this should converge in one step (which it does), you might want to reiterate over and over, just for the fun of it!
     
         icp_point_to_plane(source_points,dest_points,loop)
+    return R
                 
         
 def icp_point_to_point_lm(source_points, dest_points,initial,loop):
@@ -206,7 +205,7 @@ def icp_point_to_point_lm(source_points, dest_points,initial,loop):
     
     initial = initial + update
     
-    print np.transpose(initial)
+    print (np.transpose(initial))
     
     loop = loop + 1
     
@@ -275,7 +274,7 @@ def icp_point_to_plane_lm(source_points, dest_points,initial,loop):
     
     initial = initial + update
     
-    print np.transpose(initial)
+    print (np.transpose(initial))
     
     loop = loop + 1
     
@@ -284,8 +283,8 @@ def icp_point_to_plane_lm(source_points, dest_points,initial,loop):
         icp_point_to_point_lm(source_points,dest_points,initial, loop)
 
 
-fileOriginal = '/home/asengupt/Documents/icp/data/original.xyz'
-deformed = '/home/asengupt/Documents/icp/data/deformed.xyz'
+fileOriginal = './icp/data/original.xyz'
+deformed = './icp/data/deformed.xyz'
 
 source_points = read_file_original(fileOriginal)
 dest_points_et_normal = read_file_deformed(deformed)
@@ -297,11 +296,11 @@ initial = np.array([[0.01], [0.05], [0.01], [0.001], [0.001], [0.001]])
 # **********************************************************************
 
 
-#icp_point_to_plane(source_points,dest_points_et_normal,0)
+icp_point_to_plane(source_points,dest_points_et_normal,0)
 
 #icp_point_to_point_lm(source_points,dest_points_et_normal,initial,0)
 
-icp_point_to_plane_lm(source_points,dest_points_et_normal,initial,0)
+#icp_point_to_plane_lm(source_points,dest_points_et_normal,initial,0)
 
 
 
